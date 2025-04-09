@@ -1,0 +1,68 @@
+/* Centrado general de la página */
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:darkslategray;
+  }
+  
+  /* Caja del formulario */
+  .login-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centra los textos */
+  }
+  
+  /* Formularios */
+  .login-box form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra elementos hijos */
+    gap: 1.5rem;
+  }
+  
+  /* Etiquetas */
+  .login-box label {
+    display: block;
+    text-align: center;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Inputs centrados y más grandes */
+  .login-box input {
+    max-width: 600px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.75rem;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  /* Botón */
+  .login-box button {
+    width: 80%;
+    max-width: 320px;
+    padding: 0.75rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .login-box button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  
