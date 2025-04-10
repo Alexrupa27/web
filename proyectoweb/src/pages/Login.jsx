@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './../styles/components/Login.css'; // si usas estilos adicionales
+import { collection, getDocs} from 'firebase/firestore';
+import { db } from '../firebase_settings/firebase'
 
 function Login() {
   return (
@@ -45,8 +47,7 @@ function Login() {
 
           <button
             type="submit"
-            className="w-80 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-200 text-lg"
-          >
+            className="w-80 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-200 text-lg">
             Iniciar Sesión
           </button>
         </form>
