@@ -1,47 +1,44 @@
-// src/components/ProductosList.js
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase_settings/firebase';
-
-const ProductosList = () => {
-  const [productos, setProductos] = useState([]);
-  const [loading, setLoading] = useState(true);
+import { database, ref, onValue } from '../firebase_settings/firebase'; 
+const Home = () => {
+  const [devices, setDevices] = useState([]);
 
   useEffect(() => {
-    const fetchProductos = async () => {
-      try {
-        const productosRef = collection(db, 'productos');
-        const snapshot = await getDocs(productosRef);
-        const lista = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setProductos(lista);
-      } catch (error) {
-        console.error('Error al obtener los productos:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const devicesRef = ref(database, 'devices');  
 
-    fetchProductos();
+    onValue(devicesRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("Datos obtenidos de Firebase:", data);
+
+      if (data) {
+        const deviceList = Object.values(data);
+        console.log("Lista de dispositivos:", deviceList);
+        setDevices(deviceList);  
+      } else {
+        console.log("No hay dispositivos en la base de datos.");
+      }
+    });
   }, []);
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>📦 Lista de Productos</h1>
-      {loading ? (
-        <p>Cargando productos...</p>
-      ) : productos.length === 0 ? (
-        <p>No hay productos disponibles.</p>
-      ) : (
-        <ul>
-          {productos.map(producto => (
-    <li key={producto.id} style={{ marginBottom: '10px' }}>
-    <strong>{producto.nombre || 'Sin nombre'}</strong> - ${producto.precio ?? 'N/A'}
-    </li>
-))}
-        </ul>
-      )}
+    <div>
+      <h1>Bienvenidos a la tienda de dispositivos</h1>
+      <h2>Lista de dispositivos</h2>
+      <ul>
+        {devices.length === 0 ? (
+          <li>Cargando dispositivos...</li>
+        ) : (
+          devices.map((device, index) => (
+            <li key={index}>
+              <h3>ID: {device.id}</h3>
+              <p>Test (Float): {device.test ? device.test.float : 'N/A'}</p>  {/* Accede a float */}
+              <p>Test (Int): {device.test ? device.test.int : 'N/A'}</p>      {/* Accede a int */}
+            </li>
+          ))
+        )}
+      </ul>
     </div>
   );
 };
 
-export default ProductosList;
+export default Home;

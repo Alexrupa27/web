@@ -1,9 +1,0 @@
-{
-    "nombre": "Laptop Dell XPS 13",
-    "precio": 1299.99,
-    "descripcion": "Ultrabook con pantalla de 13 pulgadas y procesador i7",
-    "stock": 10,
-    "categoria": "Electrónica",
-    "activo": true
-  }
-  
