@@ -1,0 +1,145 @@
+/* Fondo y centrado */
+.home-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Tarjeta principal */
+  .home-card {
+    background-color: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .home-card:hover {
+    transform: scale(1.03);
+  }
+  
+  /* Título */
+  .home-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Texto de carga */
+  .home-loading {
+    font-size: 18px;
+    color: #4facfe;
+    font-weight: bold;
+  }
+  
+  /* Imagen de dispositivo */
+  .home-image {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Mensaje de error */
+  .home-error {
+    font-size: 16px;
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  /* Botón para registrar dispositivo */
+  .home-register-button {
+    background-color: #00b894;
+    color: white;
+    font-size: 16px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
+  }
+  
+  .home-register-button:hover {
+    background-color: #019875;
+  }
+  
+  /* Estilos para el popup */
+  .home-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .home-popup-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Inputs */
+  .home-input {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    width: 100%;
+  }
+  
+  .home-input:focus {
+    border-color: #4facfe;
+    outline: none;
+  }
+  
+  /* Botón de registro en el popup */
+  .home-popup-button {
+    background-color: #4facfe;
+    color: white;
+    font-size: 16px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .home-popup-button:hover {
+    background-color: #00c6ff;
+  }
+  
+  /* Cerrar popup */
+  .home-close-popup {
+    background-color: #d63031;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .home-close-popup:hover {
+    background-color: #c0392b;
+  }
+  

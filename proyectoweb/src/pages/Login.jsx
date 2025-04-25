@@ -1,60 +1,158 @@
-import React, { useEffect } from 'react';
-import './../styles/components/Login.css'; // si usas estilos adicionales
-import { collection, getDocs} from 'firebase/firestore';
-import { db } from '../firebase_settings/firebase'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, set } from 'firebase/database'; // Importa para trabajar con la base de datos
+import { auth } from '../firebase_settings/firebase'; // Usamos el auth ya exportado de firebase.js
+import "../styles/components/Login.css";
 
-function Login() {
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [showRegister, setShowRegister] = useState(false);
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [registerError, setRegisterError] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [closing, setClosing] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/home');
+    } catch (err) {
+      setError('Error al iniciar sesión: ' + err.message);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    if (registerPassword !== confirmPassword) {
+      setRegisterError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    try {
+      // Crear usuario en Firebase Authentication
+      await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
+      
+      // Reemplazamos los puntos (.) en el correo con nada (eliminarlos)
+      const sanitizedEmail = registerEmail.replace(/\./g, ""); // Eliminar todos los puntos
+
+      // Crear un nuevo usuario en Firebase Realtime Database
+      const db = getDatabase();
+      const userRef = ref(db, 'users/' + sanitizedEmail); // Usa el correo sin puntos como la clave del usuario
+      set(userRef, {
+        email: registerEmail,
+        username: registerEmail.split('@')[0],  // Extraemos el nombre de usuario del correo
+      });
+
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000); // El mensaje de éxito desaparece después de 3 segundos
+
+      setShowRegister(false); // Cierra el popup
+      setRegisterEmail('');
+      setRegisterPassword('');
+      setConfirmPassword('');
+      setRegisterError('');
+    } catch (err) {
+      setRegisterError('Error al registrarse: ' + err.message);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setShowRegister(false);
+      setClosing(false);
+    }, 300); // coincide con la duración de la animación CSS
+  };
+
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <img
-          src="https://media.tenor.com/K2bnpusQYIMAAAAM/silly-cat.gif"
-          alt="Logo"
-          className="w-10 h-10 mx-auto mb-4" width="150" height="150"/>
-          <h1 className="text-2xl font-bold text-center mb-2">¡Bienvenido!</h1>
-            <h2 className="text-base text-center mb-6 text-gray-600">
-              Inicie sesión para comprobar el estado de sus dispositivos.
-            </h2>
-              <form className="flex flex-col items-center gap-6">
-                <div className="w-full flex flex-col items-center">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700 text-center mb-2">
-              Correo electrónico
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="w-80 px-6 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
-              placeholder="correo@ejemplo.com"
-              required
-            />
-          </div>
-
-          <div className="w-full flex flex-col items-center">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700 text-center mb-2"
-            >
-              Contraseña
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="w-80 px-6 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-80 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-200 text-lg">
-            Iniciar Sesión
-          </button>
+    <div className="login-wrapper">
+      <div className="login-card">
+        <h1 className="login-title">Iniciar sesión</h1>
+        <form className="login-form" onSubmit={handleLogin}>
+          <input
+            className="login-input"
+            type="email"
+            placeholder="Correo electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            className="login-input"
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          {error && <p className="login-error">{error}</p>}
+          <button className="login-button" type="submit">Iniciar sesión</button>
         </form>
+        <div className="register-section">
+          <p>¿No tienes cuenta?</p>
+          <button className="register-button" onClick={() => setShowRegister(true)}>Registrarse</button>
+        </div>
       </div>
+
+      {showRegister && (
+        <div className="register-popup">
+          <div className={`register-popup-content ${closing ? 'fade-out' : 'fade-in'}`}>
+            <h2 className="login-title">Registro</h2>
+            <form onSubmit={handleRegister}>
+              <input
+                type="text"
+                placeholder="Nombre completo"
+                required
+                onChange={(e) => setRegisterEmail(e.target.value)}
+              />
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                value={registerEmail}
+                onChange={(e) => setRegisterEmail(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                value={registerPassword}
+                onChange={(e) => setRegisterPassword(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Confirmar contraseña"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+              {registerError && <p className="login-error">{registerError}</p>}
+              <button className="login-button" type="submit">Registrarse</button>
+            </form>
+            <button className="close-popup" onClick={handleClosePopup}>Cerrar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Mostrar el mensaje de éxito al registrarse */}
+      {showSuccess && (
+        <div className="success-toast">
+          ¡Registro exitoso! 🎉
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default Login;
-
