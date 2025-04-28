@@ -1,80 +1,95 @@
-/* Fondo y centrado */
-.home-wrapper {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(to right, #4facfe, #00f2fe);
+/* Estilo general de la página */
+.home-container {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  /* Tarjeta principal */
-  .home-card {
-    background-color: white;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 600px;
-    text-align: center;
-    transition: 0.3s ease-in-out;
-  }
-  
-  .home-card:hover {
-    transform: scale(1.03);
-  }
-  
-  /* Título */
-  .home-title {
-    font-size: 28px;
-    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
     color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
-  /* Texto de carga */
-  .home-loading {
-    font-size: 18px;
-    color: #4facfe;
-    font-weight: bold;
+  .title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
   }
   
-  /* Imagen de dispositivo */
-  .home-image {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-    border-radius: 10px;
-    margin-top: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  .subtitle {
+    font-size: 1.8rem;
+    color: #444;
   }
   
-  /* Mensaje de error */
-  .home-error {
-    font-size: 16px;
-    color: red;
-    font-weight: bold;
-    margin-top: 20px;
+  /* Estilos para la lista de dispositivos */
+  .device-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
   }
   
-  /* Botón para registrar dispositivo */
-  .home-register-button {
-    background-color: #00b894;
+  .device-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 150px;
+    height: 250px;
+    transition: transform 0.3s ease;
+  }
+  
+  .device-item:hover {
+    transform: scale(1.05);
+  }
+  
+  .device-name {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .device-id {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  
+  .device-image {
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .device-image:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Botón para abrir el modal */
+  .open-modal-btn {
+    background-color: #00bcd4;
     color: white;
-    font-size: 16px;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
+    margin-top: 30px;
+    padding: 12px 24px;
     cursor: pointer;
-    transition: 0.3s;
-    margin-top: 20px;
+    border-radius: 8px;
   }
   
-  .home-register-button:hover {
-    background-color: #019875;
+  .open-modal-btn:hover {
+    background-color: #0097a7;
   }
   
-  /* Estilos para el popup */
-  .home-popup {
+  /* Modal */
+  .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -85,61 +100,88 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    opacity: 1;
+    animation: fadeIn 0.3s forwards;
   }
   
-  .home-popup-content {
-    background: white;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .modal-content {
+    background-color: white;
     padding: 30px;
-    border-radius: 15px;
+    border-radius: 12px;
     width: 90%;
     max-width: 400px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    animation: slideIn 0.5s ease-out;
   }
   
-  /* Inputs */
-  .home-input {
-    padding: 12px 15px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 16px;
+  @keyframes slideIn {
+    from {
+      transform: translateY(-30px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  
+  /* Estilo de los campos de entrada */
+  .input-field {
     width: 100%;
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f4f7f6;
+    font-size: 1rem;
+    color: #555;
   }
   
-  .home-input:focus {
-    border-color: #4facfe;
+  .input-field:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 8px rgba(0, 188, 212, 0.4);
     outline: none;
   }
   
-  /* Botón de registro en el popup */
-  .home-popup-button {
-    background-color: #4facfe;
+  /* Botones del modal */
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .submit-btn,
+  .cancel-btn {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 48%;
     color: white;
-    font-size: 16px;
-    padding: 12px 25px;
     border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.3s ease;
   }
   
-  .home-popup-button:hover {
-    background-color: #00c6ff;
+  .submit-btn {
+    background-color: #00bcd4;
   }
   
-  /* Cerrar popup */
-  .home-close-popup {
-    background-color: #d63031;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 15px;
+  .submit-btn:hover {
+    background-color: #0097a7;
   }
   
-  .home-close-popup:hover {
-    background-color: #c0392b;
+  .cancel-btn {
+    background-color: #ff4f5b;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #e03945;
   }
   
