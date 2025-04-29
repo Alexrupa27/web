@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/home');
+      navigate('/Dispositivos'); // Redirige a la página principal después de iniciar sesión
     } catch (err) {
       setError('Error al iniciar sesión: ' + err.message);
     }

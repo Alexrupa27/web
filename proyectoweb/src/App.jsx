@@ -1,15 +1,15 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home'; // Asegúrate de que 'Home' tenga la primera letra en mayúscula
-import Contact from './pages/Contact'; // Asegúrate de que 'Contact' tenga la primera letra en mayúscula
-import Login from './pages/Login'; // Asegúrate de que 'Contact' tenga la primera letra en mayúscula
+import Dispositivos from './pages/Dispositivos';
+import Contact from './pages/Contact'; 
+import Login from './pages/Login'; 
 
 function App() {
   return (
     <Router>
         <Routes>
-          <Route path="/Home" element={<Home />} />
+          <Route path="/Dispositivos" element={<Dispositivos />} />
           <Route path="/Contact" element={<Contact />} />
           <Route path="/" element={<Login />} />
         </Routes>
