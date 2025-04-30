@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, onValue, set, get } from 'firebase/database';  // Importar 'set' y 'get' de Firebase Database
+import { getDatabase, ref, onValue, set, get, remove } from 'firebase/database';  // Importar 'remove' de Firebase Database
 import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 
@@ -21,4 +21,4 @@ const database = getDatabase(app);
 const storage = getStorage(app);
 const auth = getAuth(app);
 
-export { database, storage, ref, onValue, set, get, storageRef, getDownloadURL, auth };
+export { database, storage, ref, onValue, set, get, remove, storageRef, getDownloadURL, auth };
