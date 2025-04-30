@@ -4,7 +4,7 @@ import { database, storage, storageRef, getDownloadURL, set, get } from '../fire
 import { useNavigate } from 'react-router-dom';
 import { ref } from 'firebase/database';
 import classNames from 'classnames';
-import "../styles/components/Home.css";
+import "../styles/components/ConectaDispositivos.css";
 
 const Home = () => {
   const [devices, setDevices] = useState([]);
