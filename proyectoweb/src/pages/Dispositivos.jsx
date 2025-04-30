@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/Header';
-import Home from './Home'; //cambiar
+import Home from '../components/ConectaDispositivos'; //cambiar
 // import './styles/App.css'; 
 
 function MenuPrincipal() {
