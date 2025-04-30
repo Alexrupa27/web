@@ -153,7 +153,8 @@ const Home = () => {
           <ul className="device-list">
             {devices.map((device) => (
               <li key={device.id} className={`device-item ${device.activat === 1 ? 'active-device' : ''}`}>
-                <h3 className="device-name">{device.name} {device.activat === 1 && <span className="activat-badge">✔️ Activado</span>}</h3>
+                <h3 className="device-name">{device.name}</h3>
+                {device.activat === 1 && <div className="activat-badge">✔️ Activado</div>}
                 <p className="device-id">ID: {device.id}</p>
                 {deviceImages[device.id] ? (
                   <img
