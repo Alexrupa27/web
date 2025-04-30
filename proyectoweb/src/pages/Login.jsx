@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getDatabase, ref, set } from 'firebase/database'; // Importa para trabajar con la base de datos
-import { auth } from '../firebase_settings/firebase'; // Usamos el auth ya exportado de firebase.js
-import "../styles/components/Login.css";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail
+} from 'firebase/auth';
+import { getDatabase, ref, set } from 'firebase/database';
+import { auth } from '../firebase_settings/firebase';
+import "../styles/pages/Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,13 +22,18 @@ const Login = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [closing, setClosing] = useState(false);
 
+  // Reset password
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
+  const [showResetForm, setShowResetForm] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/Dispositivos'); // Redirige a la página principal después de iniciar sesión
+      navigate('/Dispositivos');
     } catch (err) {
       setError('Error al iniciar sesión: ' + err.message);
     }
@@ -38,26 +48,21 @@ const Login = () => {
     }
 
     try {
-      // Crear usuario en Firebase Authentication
       await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
-      
-      // Reemplazamos los puntos (.) en el correo con nada (eliminarlos)
-      const sanitizedEmail = registerEmail.replace(/\./g, ""); // Eliminar todos los puntos
-
-      // Crear un nuevo usuario en Firebase Realtime Database
+      const sanitizedEmail = registerEmail.replace(/\./g, "");
       const db = getDatabase();
-      const userRef = ref(db, 'users/' + sanitizedEmail); // Usa el correo sin puntos como la clave del usuario
+      const userRef = ref(db, 'users/' + sanitizedEmail);
       set(userRef, {
         email: registerEmail,
-        username: registerEmail.split('@')[0],  // Extraemos el nombre de usuario del correo
+        username: registerEmail.split('@')[0],
       });
 
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
-      }, 3000); // El mensaje de éxito desaparece después de 3 segundos
+      }, 3000);
 
-      setShowRegister(false); // Cierra el popup
+      setShowRegister(false);
       setRegisterEmail('');
       setRegisterPassword('');
       setConfirmPassword('');
@@ -67,12 +72,22 @@ const Login = () => {
     }
   };
 
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      setResetMessage('Correo de restablecimiento enviado. Revisa tu bandeja de entrada.');
+    } catch (err) {
+      setResetMessage('Error al enviar el correo: ' + err.message);
+    }
+  };
+
   const handleClosePopup = () => {
     setClosing(true);
     setTimeout(() => {
       setShowRegister(false);
       setClosing(false);
-    }, 300); // coincide con la duración de la animación CSS
+    }, 300);
   };
 
   return (
@@ -99,6 +114,11 @@ const Login = () => {
           {error && <p className="login-error">{error}</p>}
           <button className="login-button" type="submit">Iniciar sesión</button>
         </form>
+
+        <button className="reset-button" onClick={() => setShowResetForm(true)}>
+          ¿Olvidaste tu contraseña?
+        </button>
+
         <div className="register-section">
           <p>¿No tienes cuenta?</p>
           <button className="register-button" onClick={() => setShowRegister(true)}>Registrarse</button>
@@ -145,7 +165,26 @@ const Login = () => {
         </div>
       )}
 
-      {/* Mostrar el mensaje de éxito al registrarse */}
+      {showResetForm && (
+        <div className="reset-popup">
+          <div className="register-popup-content">
+            <h2 className="login-title">Restablecer contraseña</h2>
+            <form onSubmit={handlePasswordReset}>
+              <input
+                type="email"
+                placeholder="Tu correo electrónico"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                required
+              />
+              <button className="login-button" type="submit">Enviar enlace</button>
+            </form>
+            {resetMessage && <p className="login-error">{resetMessage}</p>}
+            <button className="close-popup" onClick={() => setShowResetForm(false)}>Cerrar</button>
+          </div>
+        </div>
+      )}
+
       {showSuccess && (
         <div className="success-toast">
           ¡Registro exitoso! 🎉
