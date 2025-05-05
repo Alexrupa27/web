@@ -1,20 +1,20 @@
-.home-container {
+.cd-home-container {
   padding: 20px;
   text-align: center;
-  min-height:500px;
+  min-height: 500px;
 }
 
-.title {
+.cd-title {
   font-size: 28px;
   margin-bottom: 20px;
 }
 
-.subtitle {
+.cd-subtitle {
   font-size: 22px;
   margin-bottom: 10px;
 }
 
-.device-list {
+.cd-device-list {
   list-style: none;
   padding: 0;
   display: grid;
@@ -22,7 +22,7 @@
   gap: 16px;
 }
 
-.device-item {
+.cd-device-item {
   border: 1px solid #ccc;
   padding: 15px;
   border-radius: 10px;
@@ -30,23 +30,23 @@
   background-color: #f9f9f9;
 }
 
-.device-item.active-device {
+.cd-active-device {
   border: 2px solid green;
   background-color: #e6ffe6;
 }
 
-.device-name {
+.cd-device-name {
   font-size: 18px;
   font-weight: bold;
 }
 
-.device-id {
+.cd-device-id {
   font-size: 14px;
   color: #555;
   margin-bottom: 10px;
 }
 
-.device-image {
+.cd-device-image {
   width: 100%;
   max-width: 200px;
   height: auto;
@@ -55,14 +55,39 @@
   transition: transform 0.2s ease;
 }
 
-.device-image:hover {
+.cd-device-image:hover {
   transform: scale(1.05);
 }
 
-.delete-device-btn,
-.open-modal-btn,
-.submit-btn,
-.cancel-btn {
+.cd-edit-menu-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.cd-edit-menu-btn:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+
+
+
+.cd-open-modal-btn,
+.cd-submit-btn,
+.cd-cancel-btn,
+.cd-delete-btn {
   padding: 8px 16px;
   margin: 5px;
   border: none;
@@ -71,27 +96,27 @@
   font-weight: bold;
 }
 
-.delete-device-btn {
-  background-color: #ff4d4d;
-  color: white;
-}
-
-.open-modal-btn {
+.cd-open-modal-btn {
   background-color: #007bff;
   color: white;
 }
 
-.submit-btn {
+.cd-submit-btn {
   background-color: #28a745;
   color: white;
 }
 
-.cancel-btn {
+.cd-cancel-btn {
   background-color: #6c757d;
   color: white;
 }
 
-.modal-overlay {
+.cd-delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cd-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -104,7 +129,7 @@
   z-index: 1000;
 }
 
-.modal-content {
+.cd-modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
@@ -113,27 +138,46 @@
   text-align: center;
 }
 
-.input-field {
+.cd-edit-mode {
+  border: 2px solid #ffc107;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+}
+
+.cd-edit-mode h2 {
+  color: #ffc107;
+}
+
+.cd-edit-mode .cd-submit-btn {
+  background-color: #ffc107;
+  color: black;
+}
+
+
+.cd-input-field {
   width: 100%;
+  box-sizing: border-box;
   padding: 10px;
   margin: 8px 0;
   border: 1px solid #ccc;
   border-radius: 6px;
 }
 
-.modal-buttons {
+
+.cd-modal-buttons {
   display: flex;
-  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
   margin-top: 15px;
 }
 
-.activat-badge {
+.cd-activat-badge {
   color: green;
   font-size: 0.9em;
   margin-left: 8px;
 }
 
-.image-modal-overlay {
+.cd-image-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -146,20 +190,20 @@
   z-index: 2000;
 }
 
-.image-modal-content {
+.cd-image-modal-content {
   position: relative;
   max-width: 90%;
   max-height: 90%;
 }
 
-.image-modal-img {
+.cd-image-modal-img {
   width: 100%;
   height: auto;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
-.image-modal-close {
+.cd-image-modal-close {
   position: absolute;
   top: -10px;
   right: -10px;
@@ -168,36 +212,5 @@
   border: none;
   border-radius: 50%;
   width: 35px;
-  height: 35px;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
-
-.edit-menu-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  border: none;
-  font-size: 20px;
-  font-weight: bold;
-  color: #555;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 6px rgba(0,0,0,0.1);
-}
-
-.edit-menu-btn:hover {
-  background-color: #007bff;
-  color: white;
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
-}
-
 
