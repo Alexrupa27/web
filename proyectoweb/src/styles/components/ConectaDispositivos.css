@@ -127,7 +127,6 @@
   margin-top: 15px;
 }
 
-/* ✅ NUEVAS CLASES AÑADIDAS PARA EL MODAL DE IMAGEN */
 .activat-badge {
   color: green;
   font-size: 0.9em;
@@ -173,3 +172,32 @@
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
+
+.edit-menu-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #555;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+.edit-menu-btn:hover {
+  background-color: #007bff;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+

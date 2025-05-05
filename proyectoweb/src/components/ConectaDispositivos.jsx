@@ -12,8 +12,8 @@ const Home = () => {
   const [newDeviceName, setNewDeviceName] = useState('');
   const [newDeviceId, setNewDeviceId] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [deviceToDelete, setDeviceToDelete] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null); // Para popup de imagen
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [deviceToEdit, setDeviceToEdit] = useState(null);
 
   const navigate = useNavigate();
 
@@ -40,33 +40,18 @@ const Home = () => {
           const devicesData = Object.values(snapshot.val());
           devicesData.sort((a, b) => b.activat - a.activat);
           setDevices(devicesData);
-
-          devicesData.forEach((device) => {
-            loadImage(device.id);
-          });
+          devicesData.forEach((device) => loadImage(device.id));
         }
       })
-      .catch((error) => {
-        console.error("Error al obtener los dispositivos:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch((error) => console.error("Error al obtener los dispositivos:", error))
+      .finally(() => setLoading(false));
   };
 
   const loadImage = (deviceId) => {
     const imageRef = storageRef(storage, `${deviceId}/${deviceId}.jpg`);
-
     getDownloadURL(imageRef)
-      .then((url) => {
-        setDeviceImages((prevState) => ({
-          ...prevState,
-          [deviceId]: url,
-        }));
-      })
-      .catch((error) => {
-        console.error("Error al obtener la URL de la imagen:", error);
-      });
+      .then((url) => setDeviceImages((prev) => ({ ...prev, [deviceId]: url })))
+      .catch(() => {});
   };
 
   const handleAddDevice = (email) => {
@@ -76,69 +61,47 @@ const Home = () => {
     }
 
     const sanitizedEmail = email.replace(/\./g, '');
-    const deviceRef = ref(database, 'users/' + sanitizedEmail + '/devices/' + newDeviceId);
+    const deviceRef = ref(database, `users/${sanitizedEmail}/devices/${newDeviceId}`);
 
-    get(deviceRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          alert("Ya existe un dispositivo con esa ID.");
-        } else {
-          set(deviceRef, {
-            id: newDeviceId,
-            name: newDeviceName,
-            activat: 0,
-          }).then(() => {
-            const newDevice = {
-              id: newDeviceId,
-              name: newDeviceName,
-              activat: 0,
-            };
-
-            setDevices((prevDevices) => [...prevDevices, newDevice]);
-            setNewDeviceName('');
-            setNewDeviceId('');
-            setShowModal(false);
-          }).catch((error) => {
-            console.error("Error al añadir el dispositivo:", error);
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error al verificar la ID del dispositivo:", error);
-      });
+    get(deviceRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        alert("Ya existe un dispositivo con esa ID.");
+      } else {
+        set(deviceRef, { id: newDeviceId, name: newDeviceName, activat: 0 }).then(() => {
+          const newDevice = { id: newDeviceId, name: newDeviceName, activat: 0 };
+          setDevices((prev) => [...prev, newDevice]);
+          setNewDeviceName('');
+          setNewDeviceId('');
+          setShowModal(false);
+        });
+      }
+    }).catch(console.error);
   };
 
   const handleDeleteDevice = (deviceId) => {
-    const userEmail = getAuth().currentUser.email;
-    const sanitizedEmail = userEmail.replace(/\./g, '');
-    const deviceRef = ref(database, 'users/' + sanitizedEmail + '/devices/' + deviceId);
+    const email = getAuth().currentUser.email;
+    const sanitizedEmail = email.replace(/\./g, '');
+    const deviceRef = ref(database, `users/${sanitizedEmail}/devices/${deviceId}`);
 
-    remove(deviceRef)
-      .then(() => {
-        setDevices(devices.filter(device => device.id !== deviceId));
-
-        const imageRef = storageRef(storage, `${deviceId}/${deviceId}.jpg`);
-        remove(imageRef).catch((error) => {
-          console.error("Error al eliminar la imagen:", error);
-        });
-      })
-      .catch((error) => {
-        console.error("Error al eliminar el dispositivo:", error);
-      })
+    remove(deviceRef).then(() => {
+      setDevices((prev) => prev.filter(device => device.id !== deviceId));
+      const imageRef = storageRef(storage, `${deviceId}/${deviceId}.jpg`);
+      remove(imageRef).catch(console.error);
+    }).catch(console.error)
       .finally(() => {
+        setDeviceToEdit(null);
         setShowModal(false);
-        setDeviceToDelete(null);
       });
   };
 
-  const handleConfirmDelete = (deviceId) => {
-    setDeviceToDelete(deviceId);
+  const handleOpenEditModal = (deviceId) => {
+    setDeviceToEdit(deviceId);
     setShowModal(true);
   };
 
-  const handleCancelDelete = () => {
+  const handleCancelEdit = () => {
+    setDeviceToEdit(null);
     setShowModal(false);
-    setDeviceToDelete(null);
   };
 
   return (
@@ -148,11 +111,12 @@ const Home = () => {
       {loading ? (
         <p>Cargando dispositivos...</p>
       ) : devices.length > 0 ? (
-        <div>
+        <>
           <h2 className="subtitle">Dispositivos</h2>
           <ul className="device-list">
             {devices.map((device) => (
               <li key={device.id} className={`device-item ${device.activat === 1 ? 'active-device' : ''}`}>
+                <button onClick={() => handleOpenEditModal(device.id)} className="edit-menu-btn">⋮</button>
                 <h3 className="device-name">{device.name}</h3>
                 {device.activat === 1 && <div className="activat-badge">✔️ Activado</div>}
                 <p className="device-id">ID: {device.id}</p>
@@ -167,69 +131,58 @@ const Home = () => {
                 ) : (
                   <p>No hay imagen disponible para este dispositivo.</p>
                 )}
-                <button onClick={() => handleConfirmDelete(device.id)} className="delete-device-btn">
-                  Eliminar Dispositivo
-                </button>
               </li>
             ))}
           </ul>
-        </div>
+        </>
       ) : (
         <p>No tienes dispositivos.</p>
       )}
 
       <button className="open-modal-btn" onClick={() => setShowModal(true)}>Añadir dispositivo</button>
 
-      {/* Modal de confirmación de eliminación */}
-      {showModal && deviceToDelete && (
+      {/* Modal de añadir o editar */}
+      {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2>¿Estás seguro de que deseas eliminar este dispositivo?</h2>
-            <p>Una vez eliminado, no podrás recuperar esta información.</p>
-            <div className="modal-buttons">
-              <button onClick={() => handleDeleteDevice(deviceToDelete)} className="cancel-btn">
-                Eliminar
-              </button>
-              <button onClick={handleCancelDelete} className="submit-btn">
-                Cancelar
-              </button>
-            </div>
+            {deviceToEdit ? (
+              <>
+                <h2>Opciones del dispositivo</h2>
+                <p>ID: {deviceToEdit}</p>
+                <div className="modal-buttons">
+                  <button onClick={() => handleDeleteDevice(deviceToEdit)} className="cancel-btn">Eliminar</button>
+                  <button onClick={handleCancelEdit} className="submit-btn">Cancelar</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2>Añadir un nuevo dispositivo</h2>
+                <input
+                  type="text"
+                  value={newDeviceName}
+                  onChange={(e) => setNewDeviceName(e.target.value)}
+                  placeholder="Nombre del dispositivo"
+                  className="input-field"
+                />
+                <input
+                  type="text"
+                  value={newDeviceId}
+                  onChange={(e) => setNewDeviceId(e.target.value)}
+                  placeholder="ID del dispositivo"
+                  className="input-field"
+                />
+                <div className="modal-buttons">
+                  <button onClick={() => handleAddDevice(getAuth().currentUser.email)} className="submit-btn">
+                    Añadir
+                  </button>
+                  <button onClick={() => setShowModal(false)} className="cancel-btn">Cancelar</button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
 
-      {/* Modal para añadir dispositivo */}
-      {showModal && !deviceToDelete && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Añadir un nuevo dispositivo</h2>
-            <input
-              type="text"
-              value={newDeviceName}
-              onChange={(e) => setNewDeviceName(e.target.value)}
-              placeholder="Nombre del dispositivo"
-              className="input-field"
-            />
-            <input
-              type="text"
-              value={newDeviceId}
-              onChange={(e) => setNewDeviceId(e.target.value)}
-              placeholder="ID del dispositivo"
-              className="input-field"
-            />
-            <div className="modal-buttons">
-              <button onClick={() => handleAddDevice(getAuth().currentUser.email)} className="submit-btn">
-                Añadir
-              </button>
-              <button onClick={() => setShowModal(false)} className="cancel-btn">
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal para mostrar imagen en grande */}
       {selectedImage && (
         <div className="image-modal-overlay" onClick={() => setSelectedImage(null)}>
           <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
