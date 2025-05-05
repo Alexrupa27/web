@@ -78,6 +78,53 @@ const Home = () => {
     }).catch(console.error);
   };
 
+  const handleUpdateDevice = () => {
+    const email = getAuth().currentUser.email;
+    const sanitizedEmail = email.replace(/\./g, '');
+
+    const oldRef = ref(database, `users/${sanitizedEmail}/devices/${deviceToEdit}`);
+    const newRef = ref(database, `users/${sanitizedEmail}/devices/${newDeviceId}`);
+
+    const updatedDevice = { id: newDeviceId, name: newDeviceName, activat: 0 };
+
+    if (deviceToEdit !== newDeviceId) {
+      get(newRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          alert("Ya existe un dispositivo con esta nueva ID.");
+        } else {
+          set(newRef, updatedDevice).then(() => {
+            remove(oldRef).then(() => {
+              setDevices((prev) =>
+                prev.map((d) =>
+                  d.id === deviceToEdit ? updatedDevice : d
+                )
+              );
+              setDeviceToEdit(null);
+              setShowModal(false);
+            });
+          });
+        }
+      });
+    } else {
+      set(oldRef, updatedDevice).then(() => {
+        setDevices((prev) =>
+          prev.map((d) =>
+            d.id === deviceToEdit ? updatedDevice : d
+          )
+        );
+        setDeviceToEdit(null);
+        setShowModal(false);
+      });
+    }
+  };
+
+  const handleDeleteConfirmation = () => {
+    const confirm = window.confirm("¿Estás seguro de que deseas eliminar este dispositivo? Esta acción no se puede deshacer.");
+    if (confirm) {
+      handleDeleteDevice(deviceToEdit);
+    }
+  };
+
   const handleDeleteDevice = (deviceId) => {
     const email = getAuth().currentUser.email;
     const sanitizedEmail = email.replace(/\./g, '');
@@ -95,8 +142,13 @@ const Home = () => {
   };
 
   const handleOpenEditModal = (deviceId) => {
-    setDeviceToEdit(deviceId);
-    setShowModal(true);
+    const device = devices.find((d) => d.id === deviceId);
+    if (device) {
+      setDeviceToEdit(deviceId);
+      setNewDeviceName(device.name);
+      setNewDeviceId(device.id);
+      setShowModal(true);
+    }
   };
 
   const handleCancelEdit = () => {
@@ -105,26 +157,26 @@ const Home = () => {
   };
 
   return (
-    <div className="home-container">
-      <h1 className="title">Bienvenidos a lista de dispositivos</h1>
+    <div className="cd-home-container">
+      <h1 className="cd-title">Bienvenidos a lista de dispositivos</h1>
 
       {loading ? (
         <p>Cargando dispositivos...</p>
       ) : devices.length > 0 ? (
         <>
-          <h2 className="subtitle">Dispositivos</h2>
-          <ul className="device-list">
+          <h2 className="cd-subtitle">Dispositivos</h2>
+          <ul className="cd-device-list">
             {devices.map((device) => (
-              <li key={device.id} className={`device-item ${device.activat === 1 ? 'active-device' : ''}`}>
-                <button onClick={() => handleOpenEditModal(device.id)} className="edit-menu-btn">⋮</button>
-                <h3 className="device-name">{device.name}</h3>
-                {device.activat === 1 && <div className="activat-badge">✔️ Activado</div>}
-                <p className="device-id">ID: {device.id}</p>
+              <li key={device.id} className={`cd-device-item ${device.activat === 1 ? 'cd-active-device' : ''}`}>
+                <button onClick={() => handleOpenEditModal(device.id)} className="cd-edit-menu-btn">⋮</button>
+                <h3 className="cd-device-name">{device.name}</h3>
+                {device.activat === 1 && <div className="cd-activat-badge">✔️ Activado</div>}
+                <p className="cd-device-id">ID: {device.id}</p>
                 {deviceImages[device.id] ? (
                   <img
                     src={deviceImages[device.id]}
                     alt={device.name}
-                    className="device-image"
+                    className="cd-device-image"
                     onClick={() => setSelectedImage(deviceImages[device.id])}
                     style={{ cursor: 'pointer' }}
                   />
@@ -139,19 +191,32 @@ const Home = () => {
         <p>No tienes dispositivos.</p>
       )}
 
-      <button className="open-modal-btn" onClick={() => setShowModal(true)}>Añadir dispositivo</button>
+      <button className="cd-open-modal-btn" onClick={() => setShowModal(true)}>Añadir dispositivo</button>
 
-      {/* Modal de añadir o editar */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="cd-modal-overlay">
+          <div className={`cd-modal-content ${deviceToEdit ? 'cd-edit-mode' : ''}`}>
             {deviceToEdit ? (
               <>
-                <h2>Opciones del dispositivo</h2>
-                <p>ID: {deviceToEdit}</p>
-                <div className="modal-buttons">
-                  <button onClick={() => handleDeleteDevice(deviceToEdit)} className="cancel-btn">Eliminar</button>
-                  <button onClick={handleCancelEdit} className="submit-btn">Cancelar</button>
+                <h2>Editar dispositivo</h2>
+                <input
+                  type="text"
+                  value={newDeviceName}
+                  onChange={(e) => setNewDeviceName(e.target.value)}
+                  placeholder="Nuevo nombre del dispositivo"
+                  className="cd-input-field"
+                />
+                <input
+                  type="text"
+                  value={newDeviceId}
+                  onChange={(e) => setNewDeviceId(e.target.value)}
+                  placeholder="Nuevo ID del dispositivo"
+                  className="cd-input-field"
+                />
+                <div className="cd-modal-buttons">
+                  <button onClick={handleUpdateDevice} className="cd-submit-btn">Guardar cambios</button>
+                  <button onClick={handleDeleteConfirmation} className="cd-delete-btn">Eliminar</button>
+                  <button onClick={handleCancelEdit} className="cd-cancel-btn">Cancelar</button>
                 </div>
               </>
             ) : (
@@ -162,20 +227,20 @@ const Home = () => {
                   value={newDeviceName}
                   onChange={(e) => setNewDeviceName(e.target.value)}
                   placeholder="Nombre del dispositivo"
-                  className="input-field"
+                  className="cd-input-field"
                 />
                 <input
                   type="text"
                   value={newDeviceId}
                   onChange={(e) => setNewDeviceId(e.target.value)}
                   placeholder="ID del dispositivo"
-                  className="input-field"
+                  className="cd-input-field"
                 />
-                <div className="modal-buttons">
-                  <button onClick={() => handleAddDevice(getAuth().currentUser.email)} className="submit-btn">
+                <div className="cd-modal-buttons">
+                  <button onClick={() => handleAddDevice(getAuth().currentUser.email)} className="cd-submit-btn">
                     Añadir
                   </button>
-                  <button onClick={() => setShowModal(false)} className="cancel-btn">Cancelar</button>
+                  <button onClick={() => setShowModal(false)} className="cd-cancel-btn">Cancelar</button>
                 </div>
               </>
             )}
@@ -184,10 +249,10 @@ const Home = () => {
       )}
 
       {selectedImage && (
-        <div className="image-modal-overlay" onClick={() => setSelectedImage(null)}>
-          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
-            <img src={selectedImage} alt="Vista ampliada" className="image-modal-img" />
-            <button className="image-modal-close" onClick={() => setSelectedImage(null)}>×</button>
+        <div className="cd-image-modal-overlay" onClick={() => setSelectedImage(null)}>
+          <div className="cd-image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <img src={selectedImage} alt="Vista ampliada" className="cd-image-modal-img" />
+            <button className="cd-image-modal-close" onClick={() => setSelectedImage(null)}>×</button>
           </div>
         </div>
       )}

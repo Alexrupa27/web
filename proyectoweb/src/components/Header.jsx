@@ -29,7 +29,7 @@ function Header() {
         setUsername(null);
       }
     });
-
+  
     return () => unsubscribe();
   }, []);
 
