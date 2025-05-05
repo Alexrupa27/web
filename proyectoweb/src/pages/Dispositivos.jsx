@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import ConectaDispositivos from '../components/ConectaDispositivos'; //cambiar
 import Footer from '../components/Footer';
-// import './styles/App.css'; 
+import '../styles/pages/Dispositivos.css'; 
 
 function MenuPrincipal() {
   return (

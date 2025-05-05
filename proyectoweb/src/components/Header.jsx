@@ -14,9 +14,11 @@ function Header() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const emailKey = currentUser.email.replace(/\./g, '');
-        const usernameRef = ref(database, `users/${emailKey}/username`);
+        const sanitizeEmail = (email) =>
+          email.replace(/\./g, ''); 
 
+        const emailKey = sanitizeEmail(currentUser.email);
+        const userRef = ref(database, `users/${emailKey}/username`);
         try {
           const snapshot = await get(usernameRef);
           if (snapshot.exists()) {
