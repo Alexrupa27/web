@@ -16,11 +16,11 @@ function Header() {
       if (currentUser) {
         const sanitizeEmail = (email) =>
           email.replace(/\./g, ''); 
-
+  
         const emailKey = sanitizeEmail(currentUser.email);
         const userRef = ref(database, `users/${emailKey}/username`);
         try {
-          const snapshot = await get(usernameRef);
+          const snapshot = await get(userRef); // <-- CORREGIDO AQUÍ
           if (snapshot.exists()) {
             setUsername(snapshot.val());
           } else {
@@ -34,7 +34,7 @@ function Header() {
         setUsername(null);
       }
     });
-
+  
     return () => unsubscribe();
   }, []);
 
