@@ -59,7 +59,7 @@ const Login = () => {
   
       navigate('/Dispositivos');
     } catch (err) {
-      setError('Error al iniciar sesión: ' + err.message);
+      setError('Error: Correo o contraseña incorrectos.');
     }
   };
   
@@ -100,7 +100,7 @@ const Login = () => {
       setRegisterPassword('');
       setConfirmPassword('');
     } catch (err) {
-      setRegisterError('Error al registrarse: ' + err.message);
+      setRegisterError('La contraseña debe poseer más de 6 carácteres');
     }
   };
 
