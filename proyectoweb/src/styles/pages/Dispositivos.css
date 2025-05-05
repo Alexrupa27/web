@@ -1,0 +1,18 @@
+/* Asegura que body y html ocupen el 100% de alto */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  /* Tu componente contenedor debe ser flex column */
+  .MenuPrincipal {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* El contenido principal se expande para empujar el footer al fondo */
+  .MenuPrincipal > *:nth-child(2) {
+    flex: 1;
+  }
+  
