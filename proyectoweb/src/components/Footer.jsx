@@ -1,32 +1,14 @@
 import React, { useState } from 'react';
-import '../styles/components/Header.css'; 
+import '../styles/components/Footer.css';
 
-function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
+function Footer() {
   return (
-    <header className="header">
-      <h1 className="logo">Plagatronic</h1>
-      
-      <nav className={`nav ${menuOpen ? 'open' : ''}`}>
-        <ul>
-          <li><a href="/">Inicio</a></li>
-          <li><a href="/sobre">Sobre</a></li>
-          <li><a href="/contacto">Contacto</a></li>
-        </ul>
-      </nav>
-
-      <div className="hamburger" onClick={toggleMenu}>
-        <span></span>
-        <span></span>
-        <span></span>
+    <footer className="footer">
+      <div className="footer-content">
+        <p>&copy; {new Date().getFullYear()} Plagatronic. Todos los derechos reservados.</p>
       </div>
-    </header>
+    </footer>
   );
 }
 
-export default Header;
+export default Footer;
