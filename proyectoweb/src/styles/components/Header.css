@@ -1,114 +1,154 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #333;
-    color: white;
-    position: relative;
-  }
-  
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #333;
+  color: white;
+  position: relative;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  justify-content: center; /* Asegura que todos los elementos estén centrados */
+  align-items: center;     /* Alinea verticalmente los elementos */
+  gap: 50px;               /* Espacio entre los elementos */
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  gap: 50px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+  font-size: 20px;
+}
+
+.nav a:hover {
+  color: #1abc9c;
+}
+
+/* Botón hamburguesa */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.username-button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top:5px;
+}
+
+.user-dropdown {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0; /* Centra el botón dentro del contenedor */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size:10px;
+}
+
+.logout-button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   .nav {
-    display: flex;
+    display: none;
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background-color: #222;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px 0;
+    width: auto;
+    min-width: 180px;
+    animation: slideDown 0.3s ease forwards;
+    z-index: 10;
   }
-  
-  .nav ul {
-    list-style: none;
+
+  .nav.open {
     display: flex;
-    gap: 50px;
+    flex-direction: column;
+  }
+
+  .nav ul {
+    display: flex;
+    flex-direction: column;
     margin: 0;
     padding: 0;
+    width: 100%;
   }
-  
-  .nav a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s;
-    font-size:20px;
+
+  .nav li {
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #444;
+    text-align: center;
   }
-  
-  .nav a:hover {
-    color: #1abc9c;
+
+  .nav li:last-child {
+    border-bottom: none;
   }
-  
-  /* Botón hamburguesa */
+
   .hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 5px;
+    display: flex;
   }
-  
-  .hamburger span {
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    transition: all 0.3s ease;
-    border-radius: 2px;
+}
+
+/* Animación */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
   }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .nav {
-      display: none;
-      position: absolute;
-      top: 70px;
-      right: 20px;
-      background-color: #222;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-      padding: 10px 0;
-      width: auto;
-      min-width: 180px;
-      animation: slideDown 0.3s ease forwards;
-      z-index: 10;
-    }
-  
-    .nav.open {
-      display: flex;
-      flex-direction: column;
-    }
-  
-    .nav ul {
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-    }
-  
-    .nav li {
-      width: 100%;
-      padding: 100px 0;
-      border-bottom: 1px solid #444;
-      text-align: center;
-    }
-  
-    .nav li:last-child {
-      border-bottom: none;
-    }
-  
-    .hamburger {
-      display: flex;
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  
-  
-  /* Animación */
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10%);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+}
+
   
