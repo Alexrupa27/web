@@ -18,7 +18,7 @@ function Header() {
           email.replace(/\./g, ''); 
 
         const emailKey = sanitizeEmail(currentUser.email);
-        const userRef = ref(database, `users/${emailKey}/username`);
+        const usernameRef = ref(database, `users/${emailKey}/username`);
         try {
           const snapshot = await get(usernameRef);
           if (snapshot.exists()) {
