@@ -4,7 +4,8 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  sendEmailVerification
 } from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
 import { auth } from '../firebase_settings/firebase';
@@ -22,7 +23,6 @@ const Login = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [closing, setClosing] = useState(false);
 
-  // Reset password
   const [resetEmail, setResetEmail] = useState('');
   const [resetMessage, setResetMessage] = useState('');
   const [showResetForm, setShowResetForm] = useState(false);
@@ -31,13 +31,23 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      if (!user.emailVerified) {
+        await auth.signOut(); // Cierra sesión si no está verificado
+        setError('Debes verificar tu correo electrónico antes de iniciar sesión.');
+        return;
+      }
+  
       navigate('/Dispositivos');
     } catch (err) {
-      setError('Error: Correo o contraseña incorrectos.');
+      setError('Error al iniciar sesión: ' + err.message);
     }
   };
+  
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -49,6 +59,10 @@ const Login = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
+
+      // Enviar correo de verificación
+      await sendEmailVerification(auth.currentUser);
+
       const sanitizedEmail = registerEmail.replace(/\./g, "");
       const db = getDatabase();
       const userRef = ref(db, 'users/' + sanitizedEmail);
@@ -57,18 +71,21 @@ const Login = () => {
         username: registerEmail.split('@')[0],
       });
 
+      // Mostrar mensaje de éxito y aviso de verificación
       setShowSuccess(true);
+      setRegisterError('Registro exitoso. Revisa tu correo para verificar tu cuenta.');
+
       setTimeout(() => {
         setShowSuccess(false);
-      }, 3000);
+        setRegisterError('');
+      }, 5000);
 
       setShowRegister(false);
       setRegisterEmail('');
       setRegisterPassword('');
       setConfirmPassword('');
-      setRegisterError('');
     } catch (err) {
-      setRegisterError('La contraseña debe contener más de 6 carácteres');
+      setRegisterError('Error al registrarse: ' + err.message);
     }
   };
 
@@ -134,7 +151,7 @@ const Login = () => {
                 type="text"
                 placeholder="Nombre completo"
                 required
-                onChange={(e) => setRegisterEmail(e.target.value)}
+                onChange={(e) => setRegisterEmail(e.target.value)} // Puedes reemplazar esto si capturas nombre por separado
               />
               <input
                 type="email"
@@ -187,7 +204,7 @@ const Login = () => {
 
       {showSuccess && (
         <div className="success-toast">
-          ¡Registro exitoso! 🎉
+          ¡Registro exitoso! 🎉 Revisa tu correo para verificar tu cuenta.
         </div>
       )}
     </div>
