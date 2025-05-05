@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { ref, get } from 'firebase/database';
-import { auth, database } from '../firebase_settings/firebase';
+import { auth, database } from '../firebase_settings/firebase'; // Ajusta la ruta si es distinta
 import '../styles/components/Header.css';
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [username, setUsername] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -16,16 +19,15 @@ function Header() {
 
         const emailKey = sanitizeEmail(currentUser.email);
         const userRef = ref(database, `users/${emailKey}/username`);
-
         try {
-          const snapshot = await get(userRef);
+          const snapshot = await get(usernameRef);
           if (snapshot.exists()) {
             setUsername(snapshot.val());
           } else {
-            setUsername(currentUser.email); // fallback
+            setUsername(currentUser.email);
           }
         } catch (error) {
-          console.error('Error al obtener username:', error);
+          console.error("Error al obtener el username:", error);
           setUsername(currentUser.email);
         }
       } else {
@@ -36,8 +38,17 @@ function Header() {
     return () => unsubscribe();
   }, []);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        setUsername(null);
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error("Error al cerrar sesión:", error);
+      });
   };
 
   return (
@@ -49,11 +60,18 @@ function Header() {
           <li><a href="/Dispositivos">Inicio</a></li>
           <li><a href="/sobre">Sobre</a></li>
           <li><a href="/contacto">Contacto</a></li>
-          <li>
-            <a href="/">
-              {username ? `Hola, ${username}` : 'Iniciar sesión'}
-            </a>
-          </li>
+          {username && (
+            <li className="user-dropdown">
+              <button className="username-button" onClick={() => setShowDropdown(!showDropdown)}>
+                {username}
+              </button>
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <button className="logout-button" onClick={handleLogout}>Cerrar Sesión</button>
+                </div>
+              )}
+            </li>
+          )}
         </ul>
       </nav>
 
