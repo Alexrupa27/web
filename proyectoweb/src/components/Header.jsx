@@ -12,7 +12,7 @@ function Header() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const sanitizeEmail = (email) =>
-          email.replace(/\./g, ','); // solo "." es problemático
+          email.replace(/\./g, ''); 
 
         const emailKey = sanitizeEmail(currentUser.email);
         const userRef = ref(database, `users/${emailKey}/username`);
