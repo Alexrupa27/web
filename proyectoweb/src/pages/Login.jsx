@@ -11,6 +11,10 @@ import { getDatabase, ref, set } from 'firebase/database';
 import { auth } from '../firebase_settings/firebase';
 import "../styles/pages/Login.css";
 
+import { useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,6 +32,17 @@ const Login = () => {
   const [showResetForm, setShowResetForm] = useState(false);
 
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.emailVerified) {
+        navigate('/Dispositivos');
+      }
+    });
+  
+    return () => unsubscribe();
+  }, [navigate]);
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
