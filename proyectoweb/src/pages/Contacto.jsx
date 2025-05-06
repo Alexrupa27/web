@@ -93,7 +93,7 @@ function Header() {
       <nav className={`nav ${menuOpen ? 'open' : ''}`}>
         <ul>
           <li><a href="/Dispositivos">Inicio</a></li>
-          <li><a href="/Contacto">Contacto</a></li>
+          <li><a href="/contacto">Contacto</a></li>
           {username && (
             <li className="user-dropdown" ref={dropdownRef}> {/* Menú del usuario para cerrar o eliminar cuenta */}
               <button className="username-button" onClick={() => setShowDropdown(!showDropdown)}>
