@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p>&copy; {new Date().getFullYear()} Plagatronic. Todos los derechos reservados.</p>
+        <p>&copy; {new Date().getFullYear()} Plagatronic. Todos los derechos reservados.</p>  {/* Cambiar nombre del footer al nombre de la empresa final */}
       </div>
     </footer>
   );
