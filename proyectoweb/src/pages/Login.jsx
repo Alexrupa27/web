@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getAuth,
@@ -11,9 +11,7 @@ import { getDatabase, ref, set } from 'firebase/database';
 import { auth } from '../firebase_settings/firebase';
 import "../styles/pages/Login.css";
 
-import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,6 +28,8 @@ const Login = () => {
   const [resetEmail, setResetEmail] = useState('');
   const [resetMessage, setResetMessage] = useState('');
   const [showResetForm, setShowResetForm] = useState(false);
+  const [resetTimeout, setResetTimeout] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(60);
 
   const navigate = useNavigate();
   
@@ -43,6 +43,20 @@ const Login = () => {
     return () => unsubscribe();
   }, [navigate]);
   
+  // Temporizador para el reset de contraseña
+  useEffect(() => {
+    let interval;
+    if (resetTimeout && timeRemaining > 0) {
+      interval = setInterval(() => {
+        setTimeRemaining((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (timeRemaining === 0) {
+      setResetTimeout(false);
+      setTimeRemaining(60);
+    }
+    
+    return () => clearInterval(interval);
+  }, [resetTimeout, timeRemaining]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -63,7 +77,6 @@ const Login = () => {
     }
   };
   
-
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -106,9 +119,20 @@ const Login = () => {
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
+    
+    // Verificar si hay un timeout activo
+    if (resetTimeout) {
+      setResetMessage(`Espera ${timeRemaining} segundos antes de solicitar otro restablecimiento.`);
+      return;
+    }
+    
     try {
       await sendPasswordResetEmail(auth, resetEmail);
       setResetMessage('Correo de restablecimiento enviado. Revisa tu bandeja de entrada.');
+      
+      // Activar timeout de 1 minuto
+      setResetTimeout(true);
+      setTimeRemaining(60);
     } catch (err) {
       setResetMessage('Error al enviar el correo: ' + err.message);
     }
@@ -166,7 +190,7 @@ const Login = () => {
                 type="text"
                 placeholder="Nombre completo"
                 required
-                onChange={(e) => setRegisterEmail(e.target.value)} // Puedes reemplazar esto si capturas nombre por separado
+                onChange={(e) => setRegisterEmail(e.target.value)} 
               />
               <input
                 type="email"
@@ -201,6 +225,10 @@ const Login = () => {
         <div className="reset-popup">
           <div className="register-popup-content">
             <h2 className="login-title">Restablecer contraseña</h2>
+            
+            {/* Mensaje de restablecimiento encima de los botones */}
+            {resetMessage && <p className="reset-message">{resetMessage}</p>}
+
             <form onSubmit={handlePasswordReset}>
               <input
                 type="email"
@@ -209,9 +237,14 @@ const Login = () => {
                 onChange={(e) => setResetEmail(e.target.value)}
                 required
               />
-              <button className="login-button" type="submit">Enviar enlace</button>
+              <button 
+                className="login-button" 
+                type="submit"
+                disabled={resetTimeout}
+              >
+                {resetTimeout ? `Espera (${timeRemaining}s)` : 'Enviar enlace'}
+              </button>
             </form>
-            {resetMessage && <p className="login-error">{resetMessage}</p>}
             <button className="close-popup" onClick={() => setShowResetForm(false)}>Cerrar</button>
           </div>
         </div>

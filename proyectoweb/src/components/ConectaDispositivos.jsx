@@ -185,6 +185,10 @@ const Home = () => {
   return (
     <div className="cd-home-container">
       <h1 className="cd-title">Bienvenidos a lista de dispositivos</h1>
+      
+      <div className="cd-header-actions">
+        <button className="cd-open-modal-btn" onClick={() => setShowModal(true)}>Añadir dispositivo</button>
+      </div>
 
       {loading ? (
         <p>Cargando dispositivos...</p>
@@ -214,10 +218,10 @@ const Home = () => {
           </ul>
         </>
       ) : (
-        <p>No tienes dispositivos.</p>
+        <>
+          <p>No tienes dispositivos.</p>
+        </>
       )}
-
-      <button className="cd-open-modal-btn" onClick={() => setShowModal(true)}>Añadir dispositivo</button>
 
       {showModal && (
         <div className="cd-modal-overlay">
