@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { onAuthStateChanged, signOut, deleteUser } from 'firebase/auth';
 import { ref, get, remove } from 'firebase/database';
 import { auth, database } from '../firebase_settings/firebase';
@@ -9,6 +9,7 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [username, setUsername] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,9 +30,28 @@ function Header() {
         setUsername(null);
       }
     });
-  
+
     return () => unsubscribe();
   }, []);
+
+  // Detectar clic fuera del dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -53,11 +73,8 @@ function Header() {
       if (!confirmed) return;
 
       try {
-        // Eliminar datos del Realtime Database si es necesario
         const emailKey = currentUser.email.replace(/\./g, '');
         await remove(ref(database, `users/${emailKey}`));
-
-        // Eliminar cuenta
         await deleteUser(currentUser);
         alert('Cuenta eliminada correctamente.');
         navigate('/');
@@ -78,7 +95,7 @@ function Header() {
           <li><a href="/sobre">Sobre</a></li>
           <li><a href="/contacto">Contacto</a></li>
           {username && (
-            <li className="user-dropdown">
+            <li className="user-dropdown" ref={dropdownRef}>
               <button className="username-button" onClick={() => setShowDropdown(!showDropdown)}>
                 {username}
               </button>
