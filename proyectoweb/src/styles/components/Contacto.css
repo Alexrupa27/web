@@ -1,0 +1,53 @@
+.contacto-container {
+  padding: 20px;
+  text-align: center;
+  min-height: 500px;
+  background-color: #f5f5f5;
+}
+
+.contacto-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.contacto-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.contacto-card-title {
+  font-size: 22px;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.contacto-card p {
+  font-size: 16px;
+  color: #555;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .contacto-card {
+    padding: 15px;
+  }
+
+  .contacto-card-title {
+    font-size: 20px;
+  }
+
+  .contacto-card p {
+    font-size: 14px;
+  }
+}
