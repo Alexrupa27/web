@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { database, storage, storageRef, getDownloadURL, set, get, remove } from '../firebase_settings/firebase';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,9 @@ const Home = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [deviceToEdit, setDeviceToEdit] = useState(null);
 
+  const modalRef = useRef(null);
+  const imageModalRef = useRef(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +32,29 @@ const Home = () => {
 
     return () => unsubscribe();
   }, [navigate]);
+
+  useEffect(() => {
+    const handleClickOutsideModal = (event) => {
+      if (showModal && modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowModal(false);
+        setDeviceToEdit(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideModal);
+    return () => document.removeEventListener('mousedown', handleClickOutsideModal);
+  }, [showModal]);
+
+  useEffect(() => {
+    const handleClickOutsideImage = (event) => {
+      if (selectedImage && imageModalRef.current && !imageModalRef.current.contains(event.target)) {
+        setSelectedImage(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideImage);
+    return () => document.removeEventListener('mousedown', handleClickOutsideImage);
+  }, [selectedImage]);
 
   const loadDevices = (email) => {
     const sanitizedEmail = email.replace(/\./g, '');
@@ -195,7 +221,7 @@ const Home = () => {
 
       {showModal && (
         <div className="cd-modal-overlay">
-          <div className={`cd-modal-content ${deviceToEdit ? 'cd-edit-mode' : ''}`}>
+          <div ref={modalRef} className={`cd-modal-content ${deviceToEdit ? 'cd-edit-mode' : ''}`}>
             {deviceToEdit ? (
               <>
                 <h2>Editar dispositivo</h2>
@@ -249,8 +275,8 @@ const Home = () => {
       )}
 
       {selectedImage && (
-        <div className="cd-image-modal-overlay" onClick={() => setSelectedImage(null)}>
-          <div className="cd-image-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="cd-image-modal-overlay">
+          <div ref={imageModalRef} className="cd-image-modal-content">
             <img src={selectedImage} alt="Vista ampliada" className="cd-image-modal-img" />
             <button className="cd-image-modal-close" onClick={() => setSelectedImage(null)}>×</button>
           </div>

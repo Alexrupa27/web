@@ -65,7 +65,7 @@
   margin-top:5px;
 }
 .delete-button {
-  background: #c0392b;
+  background: #dc3545;
   color: white;
   border: none;
   padding: 0.4rem 1rem;
@@ -94,7 +94,7 @@
 }
 
 .logout-button {
-  background: red;
+  background: #ffc107;
   color: white;
   border: none;
   padding: 0.4rem 1rem;
