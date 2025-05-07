@@ -182,10 +182,25 @@ const Home = () => {
     setShowModal(false);
   };
 
+  // Nueva función para desactivar el dispositivo
+  const handleDeactivateDevice = (deviceId) => {
+    const email = getAuth().currentUser.email;
+    const sanitizedEmail = email.replace(/\./g, '');
+    const deviceRef = ref(database, `users/${sanitizedEmail}/devices/${deviceId}`);
+
+    set(deviceRef, { activat: 0 }).then(() => {
+      setDevices((prev) =>
+        prev.map((device) =>
+          device.id === deviceId ? { ...device, activat: 0 } : device
+        )
+      );
+    }).catch(console.error);
+  };
+
   return (
     <div className="cd-home-container">
       <h1 className="cd-title">Bienvenidos a lista de dispositivos</h1>
-      
+
       <div className="cd-header-actions">
         <button className="cd-open-modal-btn" onClick={() => setShowModal(true)}>Añadir dispositivo</button>
       </div>
@@ -213,14 +228,28 @@ const Home = () => {
                 ) : (
                   <p>No hay imagen disponible para este dispositivo.</p>
                 )}
+
+                {/* Botón de desactivación */}
+                {device.activat === 1 && (
+  <button
+    onClick={() => {
+      const confirmed = window.confirm(`¿Estás seguro de que deseas desactivar el dispositivo "${device.name}"?`);
+      if (confirmed) {
+        handleDeactivateDevice(device.id);
+      }
+    }}
+    className="cd-deactivate-btn"
+  >
+    Desactivar
+  </button>
+)}
+
               </li>
             ))}
           </ul>
         </>
       ) : (
-        <>
-          <p>No tienes dispositivos.</p>
-        </>
+        <p>No tienes dispositivos.</p>
       )}
 
       {showModal && (

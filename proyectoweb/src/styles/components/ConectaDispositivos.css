@@ -82,9 +82,6 @@
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
 }
 
-
-
-
 .cd-open-modal-btn,
 .cd-submit-btn,
 .cd-cancel-btn,
@@ -213,5 +210,27 @@
   border: none;
   border-radius: 50%;
   width: 35px;
+}
+
+/* Estilos generales para el botón de desactivación */
+.cd-deactivate-btn {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Cambia el color del botón cuando se pasa el ratón por encima */
+.cd-deactivate-btn:hover {
+  background-color: #ff4747;
+}
+
+/* Estilo cuando el dispositivo está activado */
+.cd-active-device {
+  background-color: #e8ffe8; /* Color verde claro para indicar que está activado */
 }
 
