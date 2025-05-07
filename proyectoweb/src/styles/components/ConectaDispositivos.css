@@ -53,7 +53,7 @@
   border-radius: 8px;
   margin-bottom: 10px;
   transition: transform 0.2s ease;
-  rotate: 180deg
+  rotate: 180deg;
 }
 
 .cd-device-image:hover {
@@ -186,7 +186,6 @@
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  rotate: 180deg;
 }
 
 .cd-image-modal-content {
@@ -200,6 +199,7 @@
   height: auto;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  rotate: 180deg;
 }
 
 .cd-image-modal-close {
