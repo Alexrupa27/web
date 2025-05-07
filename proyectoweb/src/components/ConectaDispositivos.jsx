@@ -77,7 +77,7 @@ const Home = () => {
     const imageRef = storageRef(storage, `${deviceId}/${deviceId}.jpg`);
     getDownloadURL(imageRef)
       .then((url) => setDeviceImages((prev) => ({ ...prev, [deviceId]: url })))
-      .catch(() => {});
+      .catch(() => { });
   };
 
   const handleAddDevice = (email) => {
@@ -182,20 +182,28 @@ const Home = () => {
     setShowModal(false);
   };
 
-  // Nueva función para desactivar el dispositivo
   const handleDeactivateDevice = (deviceId) => {
     const email = getAuth().currentUser.email;
     const sanitizedEmail = email.replace(/\./g, '');
     const deviceRef = ref(database, `users/${sanitizedEmail}/devices/${deviceId}`);
-
-    set(deviceRef, { activat: 0 }).then(() => {
-      setDevices((prev) =>
-        prev.map((device) =>
-          device.id === deviceId ? { ...device, activat: 0 } : device
-        )
-      );
+  
+    get(deviceRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const existingData = snapshot.val();
+        const updatedDevice = { ...existingData, activat: 0 };
+        set(deviceRef, updatedDevice).then(() => {
+          setDevices((prev) =>
+            prev.map((d) =>
+              d.id === deviceId ? { ...d, activat: 0 } : d
+            )
+          );
+        });
+      } else {
+        console.error("Dispositivo no encontrado para desactivar.");
+      }
     }).catch(console.error);
   };
+  
 
   return (
     <div className="cd-home-container">
@@ -231,18 +239,18 @@ const Home = () => {
 
                 {/* Botón de desactivación */}
                 {device.activat === 1 && (
-  <button
-    onClick={() => {
-      const confirmed = window.confirm(`¿Estás seguro de que deseas desactivar el dispositivo "${device.name}"?`);
-      if (confirmed) {
-        handleDeactivateDevice(device.id);
-      }
-    }}
-    className="cd-deactivate-btn"
-  >
-    Desactivar
-  </button>
-)}
+                  <button
+                    onClick={() => {
+                      const confirmed = window.confirm(`¿Estás seguro de que deseas desactivar el dispositivo "${device.name}"?`);
+                      if (confirmed) {
+                        handleDeactivateDevice(device.id);
+                      }
+                    }}
+                    className="cd-deactivate-btn"
+                  >
+                    Desactivar
+                  </button>
+                )}
 
               </li>
             ))}
