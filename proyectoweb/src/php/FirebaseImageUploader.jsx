@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import React, { useEffect, useState } from 'react';
+import { storage, storageRef, getDownloadURL } from '../firebase_settings/firebase';
+import { getStorage, ref, uploadBytes } from '../firebase_settings/firebase';
+
 
 // Configuración de Firebase (reemplaza estos valores con los tuyos)
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyDTAgQkw3EpO08Jpmz1YWMLUej3uQxw424",
+  authDomain: "esp-database-a23e4.firebaseapp.com",
+  databaseURL: "https://esp-database-a23e4-default-rtdb.firebaseio.com",
+  projectId: "esp-database-a23e4",
+  storageBucket: "esp-database-a23e4.firebasestorage.app",
+  messagingSenderId: "548318257448",
+  appId: "1:548318257448:web:539a56abfa7030b4a5701d",
+  measurementId: "G-V127SGS8Q6"
 };
 
 // Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
 
 // Componente de carga de imágenes
 const FirebaseImageUploader = () => {
