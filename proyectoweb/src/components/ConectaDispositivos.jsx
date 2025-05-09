@@ -186,7 +186,7 @@ const Home = () => {
     const email = getAuth().currentUser.email;
     const sanitizedEmail = email.replace(/\./g, '');
     const deviceRef = ref(database, `users/${sanitizedEmail}/devices/${deviceId}`);
-  
+
     get(deviceRef).then((snapshot) => {
       if (snapshot.exists()) {
         const existingData = snapshot.val();
@@ -203,21 +203,30 @@ const Home = () => {
       }
     }).catch(console.error);
   };
-  
 
   return (
     <div className="cd-home-container">
       <h1 className="cd-title">Bienvenidos a lista de dispositivos</h1>
 
       <div className="cd-header-actions">
-        <button className="cd-open-modal-btn" onClick={() => setShowModal(true)}>Añadir dispositivo</button>
+        <button
+          className="cd-open-modal-btn"
+          onClick={() => {
+            setNewDeviceName('');
+            setNewDeviceId('');
+            setDeviceToEdit(null);
+            setShowModal(true);
+          }}
+        >
+          Añadir dispositivo
+        </button>
       </div>
 
       {loading ? (
         <p>Cargando dispositivos...</p>
       ) : devices.length > 0 ? (
         <>
-          <h2 className="cd-subtitle">Dispositivos</h2>
+          <h2 className="cd-subtitle">Dispositivos:</h2>
           <ul className="cd-device-list">
             {devices.map((device) => (
               <li key={device.id} className={`cd-device-item ${device.activat === 1 ? 'cd-active-device' : ''}`}>
@@ -236,8 +245,6 @@ const Home = () => {
                 ) : (
                   <p>No hay imagen disponible para este dispositivo.</p>
                 )}
-
-                {/* Botón de desactivación */}
                 {device.activat === 1 && (
                   <button
                     onClick={() => {
@@ -251,7 +258,6 @@ const Home = () => {
                     Desactivar
                   </button>
                 )}
-
               </li>
             ))}
           </ul>
