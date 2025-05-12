@@ -1,4 +1,8 @@
 <?php
+// Include the Firebase PHP library files manually
+require_once __DIR__ . '/vendor/kreait/firebase-php/src/Firebase/Factory.php';
+require_once __DIR__ . '/vendor/kreait/firebase-php/src/Firebase/Firebase.php';
+
 // Configuración de CORS
 header("Access-Control-Allow-Origin: *"); // Reemplaza * con tu dominio en producción
 header("Access-Control-Allow-Headers: Content-Type");
