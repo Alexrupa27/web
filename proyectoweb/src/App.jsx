@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dispositivos from './pages/Dispositivos';
+import TrampaElectrica from './pages/TrampaElectrica';
 import Contacto from './pages/Contacto'; 
 import Login from './pages/Login'; 
 import PHP from './php/FirebaseImageUploader';
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/Dispositivos" element={<Dispositivos />} />
           <Route path="/Contacto" element={<Contacto />} />
+          <Route path="/DispositivosTrampaElectrica" element={<TrampaElectrica />} />
           <Route path="/" element={<Login />} />
           <Route path="/PHP" element={<PHP />} />
         </Routes>

@@ -1,0 +1,280 @@
+/* TrampaElectrica.css */
+
+* {
+  box-sizing: border-box;
+}
+
+.te-container {
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  color: #222;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Header */
+.te-header {
+  margin-bottom: 2rem;
+}
+
+.te-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.te-subtitle {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+/* Add Button */
+.te-add-button-container {
+  margin-bottom: 2rem;
+}
+
+.te-add-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.te-add-button:hover {
+  background-color: #0056b3;
+}
+
+/* Grid */
+.te-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 0;
+}
+
+/* Cards */
+.te-card {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.te-card:hover {
+  transform: scale(1.02);
+}
+
+.te-card-active {
+  border: 2px solid green;
+  background-color: #e6ffe6;
+}
+
+.te-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.te-card-info p {
+  font-size: 14px;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+.te-edit-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  color: #333;
+}
+
+.te-edit-button:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Images */
+.te-card-image {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease;
+  rotate: 180deg;
+}
+
+.te-card-image:hover {
+  transform: scale(1.05);
+}
+
+.te-no-image {
+  width: 100%;
+  height: 8rem;
+  background: #e0e0e0;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  font-size: 14px;
+  color: #888;
+}
+
+/* Toggle Buttons */
+.te-toggle-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.te-activate {
+  background-color: #28a745;
+  color: white;
+}
+
+.te-activate:hover {
+  background-color: #218838;
+}
+
+.te-deactivate {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.te-deactivate:hover {
+  background-color: #ff4747;
+}
+
+/* Modal */
+.te-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.te-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.te-modal-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Input */
+.te-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Modal Buttons */
+.te-modal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.te-modal-button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.te-save-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.te-cancel-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.te-delete-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Image Modal */
+.te-image-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.te-image-modal {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.te-image-modal-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  rotate: 180deg;
+}
+
+.te-image-close-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 24px;
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+}

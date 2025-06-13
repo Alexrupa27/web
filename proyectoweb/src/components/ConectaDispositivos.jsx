@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { database, storage, storageRef, getDownloadURL, set, get, remove } from '../firebase_settings/firebase';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,23 @@ const Home = () => {
 
   const navigate = useNavigate();
 
+  const loadDevices = useCallback((email) => {
+    const sanitizedEmail = email.replace(/\./g, '');
+    const devicesRef = ref(database, 'users/' + sanitizedEmail + '/devices');
+
+    get(devicesRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const devicesData = Object.values(snapshot.val());
+          devicesData.sort((a, b) => b.activat - a.activat);
+          setDevices(devicesData);
+          devicesData.forEach((device) => loadImage(device.id));
+        }
+      })
+      .catch((error) => console.error("Error al obtener los dispositivos:", error))
+      .finally(() => setLoading(false));
+  }, []);
+
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -31,7 +48,7 @@ const Home = () => {
     });
 
     return () => unsubscribe();
-  }, [navigate]);
+  }, [navigate, loadDevices]);
 
   useEffect(() => {
     const handleClickOutsideModal = (event) => {
@@ -56,28 +73,24 @@ const Home = () => {
     return () => document.removeEventListener('mousedown', handleClickOutsideImage);
   }, [selectedImage]);
 
-  const loadDevices = (email) => {
-    const sanitizedEmail = email.replace(/\./g, '');
-    const devicesRef = ref(database, 'users/' + sanitizedEmail + '/devices');
-
-    get(devicesRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const devicesData = Object.values(snapshot.val());
-          devicesData.sort((a, b) => b.activat - a.activat);
-          setDevices(devicesData);
-          devicesData.forEach((device) => loadImage(device.id));
-        }
-      })
-      .catch((error) => console.error("Error al obtener los dispositivos:", error))
-      .finally(() => setLoading(false));
-  };
-
-  const loadImage = (deviceId) => {
-    const imageRef = storageRef(storage, `${deviceId}/${deviceId}.jpg`);
-    getDownloadURL(imageRef)
-      .then((url) => setDeviceImages((prev) => ({ ...prev, [deviceId]: url })))
-      .catch(() => { });
+  const loadImage = async (deviceId) => {
+    // Lista de extensiones de imagen a probar
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+    
+    for (const extension of imageExtensions) {
+      try {
+        const imageRef = storageRef(storage, `${deviceId}/${deviceId}.${extension}`);
+        const url = await getDownloadURL(imageRef);
+        setDeviceImages((prev) => ({ ...prev, [deviceId]: url }));
+        return; // Si encuentra la imagen, sale del bucle
+      } catch (error) {
+        // Continúa con la siguiente extensión si no encuentra la imagen
+        continue;
+      }
+    }
+    
+    // Si no encuentra ninguna imagen con las extensiones probadas
+    console.log(`No se encontró imagen para el dispositivo ${deviceId}`);
   };
 
   const handleAddDevice = (email) => {
@@ -151,20 +164,33 @@ const Home = () => {
     }
   };
 
-  const handleDeleteDevice = (deviceId) => {
+  const handleDeleteDevice = async (deviceId) => {
     const email = getAuth().currentUser.email;
     const sanitizedEmail = email.replace(/\./g, '');
     const deviceRef = ref(database, `users/${sanitizedEmail}/devices/${deviceId}`);
 
-    remove(deviceRef).then(() => {
+    try {
+      await remove(deviceRef);
       setDevices((prev) => prev.filter(device => device.id !== deviceId));
-      const imageRef = storageRef(storage, `${deviceId}/${deviceId}.jpg`);
-      remove(imageRef).catch(console.error);
-    }).catch(console.error)
-      .finally(() => {
-        setDeviceToEdit(null);
-        setShowModal(false);
-      });
+      
+      // Intentar eliminar la imagen con diferentes extensiones
+      const imageExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+      for (const extension of imageExtensions) {
+        try {
+          const imageRef = storageRef(storage, `${deviceId}/${deviceId}.${extension}`);
+          await remove(imageRef);
+          break; // Si elimina exitosamente, sale del bucle
+        } catch (error) {
+          // Continúa con la siguiente extensión
+          continue;
+        }
+      }
+    } catch (error) {
+      console.error("Error al eliminar dispositivo:", error);
+    } finally {
+      setDeviceToEdit(null);
+      setShowModal(false);
+    }
   };
 
   const handleOpenEditModal = (deviceId) => {
@@ -206,7 +232,7 @@ const Home = () => {
 
   return (
     <div className="cd-home-container">
-      <h1 className="cd-title">Bienvenidos a lista de dispositivos</h1>
+      <h1 className="cd-title">Jaulas de ratones</h1>
 
       <div className="cd-header-actions">
         <button

@@ -1,191 +1,230 @@
+:root {
+  --primary-color: #007bff;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --gray-dark: #343a40;
+  --gray: #6c757d;
+  --gray-light: #e9ecef;
+  --background-color: #f5f7fa;
+  --card-background: #ffffff;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+body {
+  background-color: var(--background-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--gray-dark);
+}
+
 .cd-home-container {
-  padding: 20px;
+  padding: 40px;
   text-align: center;
-  min-height: 500px;
+  min-height: 100vh;
 }
 
 .cd-title {
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size: 32px;
+  margin-bottom: 16px;
+  font-weight: 600;
 }
 
 .cd-subtitle {
-  font-size: 22px;
-  margin-bottom: 10px;
+  font-size: 20px;
+  margin-bottom: 24px;
+  color: var(--gray);
 }
 
 .cd-device-list {
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 
 .cd-device-item {
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 10px;
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: 20px;
   position: relative;
-  background-color: #f9f9f9;
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+}
+
+.cd-device-item:hover {
+  transform: translateY(-4px);
 }
 
 .cd-active-device {
-  border: 2px solid green;
-  background-color: #e6ffe6;
+  border: 2px solid var(--success-color);
+  background-color: #eafbef;
 }
 
 .cd-device-name {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .cd-device-id {
   font-size: 14px;
-  color: #555;
-  margin-bottom: 10px;
+  color: var(--gray);
+  margin-bottom: 12px;
 }
 
 .cd-device-image {
   width: 100%;
-  max-width: 200px;
+  max-width: 220px;
   height: auto;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  transition: transform 0.2s ease;
+  border-radius: 10px;
+  margin-bottom: 12px;
   rotate: 180deg;
+  transition: transform 0.3s ease;
 }
 
 .cd-device-image:hover {
-  transform: scale(1.05);
+  transform: scale(1.07);
 }
 
 .cd-edit-menu-btn {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: transparent;
+  top: 10px;
+  right: 10px;
+  background: var(--gray-light);
   border: none;
-  font-size: 18px;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
   border-radius: 50%;
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: var(--transition);
 }
 
 .cd-edit-menu-btn:hover {
-  background-color: #e0e0e0;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+  background-color: #d6d8db;
 }
 
 .cd-open-modal-btn,
 .cd-submit-btn,
 .cd-cancel-btn,
-.cd-delete-btn {
-  padding: 8px 16px;
-  margin: 5px;
+.cd-delete-btn,
+.cd-deactivate-btn {
+  padding: 10px 20px;
+  margin: 6px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: bold;
+  transition: var(--transition);
 }
 
 .cd-open-modal-btn {
-  background-color: #007bff;
+  background-color: var(--primary-color);
+  color: white;
+  height: 5em;
+  width: 15em;
+}
+.cd-open-modal-btn:hover {
+  background-color: #006ee4;
   color: white;
 }
 
 .cd-submit-btn {
-  background-color: #28a745;
+  background-color: var(--success-color);
   color: white;
 }
 
 .cd-cancel-btn {
-  background-color: #6c757d;
+  background-color: var(--gray);
   color: white;
 }
 
 .cd-delete-btn {
-  background-color: #dc3545;
+  background-color: var(--danger-color);
   color: white;
 }
 
-.cd-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+.cd-deactivate-btn {
+  background-color: #ff6b6b;
+  color: white;
 }
 
-.cd-modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
+.cd-deactivate-btn:hover {
+  background-color: #ff4747;
 }
 
-.cd-edit-mode {
-  border: 2px solid #ffc107;
-  box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
-}
-
-.cd-edit-mode h2 {
-  color: #ffc107;
-}
-
-.cd-edit-mode .cd-submit-btn {
-  background-color: #ffc107;
-  color: black;
-}
-
-
-.cd-input-field {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-
-.cd-modal-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 15px;
-}
-
-.cd-activat-badge {
-  color: green;
-  font-size: 0.9em;
-  margin-left: 8px;
-}
-
+.cd-modal-overlay,
 .cd-image-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 2000;
+}
+
+.cd-modal-content {
+  background-color: white;
+  padding: 24px;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 420px;
+  box-shadow: var(--box-shadow);
+  text-align: center;
+}
+
+.cd-edit-mode {
+  border: 2px solid var(--warning-color);
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.2);
+}
+
+.cd-edit-mode h2 {
+  color: var(--warning-color);
+}
+
+.cd-edit-mode .cd-submit-btn {
+  background-color: var(--warning-color);
+  color: black;
+}
+
+.cd-input-field {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+  transition: var(--transition);
+}
+
+.cd-input-field:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+
+.cd-modal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.cd-activat-badge {
+  color: var(--success-color);
+  font-size: 0.95em;
+  margin-left: 10px;
 }
 
 .cd-image-modal-content {
@@ -197,41 +236,21 @@
 .cd-image-modal-img {
   width: 100%;
   height: auto;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   rotate: 180deg;
 }
 
 .cd-image-modal-close {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: -12px;
+  right: -12px;
   font-size: 24px;
-  background: #fff;
+  background: white;
   border: none;
   border-radius: 50%;
-  width: 35px;
-}
-
-/* Estilos generales para el botón de desactivación */
-.cd-deactivate-btn {
-  background-color: #ff6b6b;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  box-shadow: var(--box-shadow);
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
-
-/* Cambia el color del botón cuando se pasa el ratón por encima */
-.cd-deactivate-btn:hover {
-  background-color: #ff4747;
-}
-
-/* Estilo cuando el dispositivo está activado */
-.cd-active-device {
-  background-color: #e8ffe8; /* Color verde claro para indicar que está activado */
-}
-
