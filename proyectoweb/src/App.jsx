@@ -5,6 +5,7 @@ import Dispositivos from './pages/Dispositivos';
 import TrampaElectrica from './pages/TrampaElectrica';
 import Contacto from './pages/Contacto'; 
 import Login from './pages/Login'; 
+import Bienvenido from './pages/Inicio';
 import PHP from './php/FirebaseImageUploader';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/Dispositivos" element={<Dispositivos />} />
           <Route path="/Contacto" element={<Contacto />} />
+          <Route path="/Inicio" element={<Bienvenido />} />
           <Route path="/DispositivosTrampaElectrica" element={<TrampaElectrica />} />
           <Route path="/" element={<Login />} />
           <Route path="/PHP" element={<PHP />} />

@@ -1,0 +1,45 @@
+.bienvenido-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  text-align: center;
+  background-color: white;  /* Fondo claro */
+  color: #222;              /* Texto oscuro */
+  min-height: calc(100vh - 160px);
+}
+
+.welcome-title {
+  font-size: 48px;
+  margin-bottom: 30px;
+  color: #1abc9c; /* Mantiene color llamativo */
+}
+
+.instruction-text {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.button-group {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.device-button {
+  background-color: transparent;
+  color: #222; /* Texto oscuro */
+  border: 2px solid #222;
+  padding: 12px 24px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.device-button:hover {
+  background-color: #1abc9c;
+  color: white; /* Inversión al pasar el mouse */
+}

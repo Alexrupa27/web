@@ -7,6 +7,51 @@
   color: white;
   position: relative;
 }
+/* Menú desplegable de Dispositivos */
+.device-dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: white;
+  font-size: 20px;
+}
+
+.device-dropdown .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  padding: 0.5rem 0;
+  z-index: 1000;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  animation: slideDown 0.2s ease forwards;
+}
+.dropdown-toggle:hover {
+  color: #1abc9c;
+}
+
+
+.device-dropdown .dropdown-menu a {
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.device-dropdown .dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
+
 
 .logo {
   font-size: 24px;
@@ -63,6 +108,9 @@
   cursor: pointer;
   font-size: 18px;
   margin-top:5px;
+}
+.username-button:hover {
+  color: #1abc9c;
 }
 .delete-button {
   background: #dc3545;
